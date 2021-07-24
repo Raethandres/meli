@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+
+  web:
+    init: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      go-network:
+        ipv4_address: "172.120.0.11"
+    ports:
+      - "27017:8110"
+  db:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+
+networks:
+  go-network:
+    name: webnetwork
+    ipam:
+      config:
+        - subnet: "172.120.0.0/24"
+
+
