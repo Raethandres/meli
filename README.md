@@ -36,6 +36,7 @@ $ go test ./...
 
 #### Run project
 ```sh
+cd ./cmd/server
 $ go run .
 ```
 Ir a `http://127.0.0.1:80`
