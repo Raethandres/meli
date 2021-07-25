@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	. "meli/cmd/data"
-	. "meli/pkg/domain"
 	. "meli/pkg/request"
 	. "meli/pkg/response"
 
@@ -22,19 +21,35 @@ func TopSecretSplitGetHandler(w http.ResponseWriter, r *http.Request, c *Cache) 
 		return
 	}
 
-	response := handleTopSecretSplitGet(kenobi.(SateliteRequest), skywalker.(SateliteRequest), sato.(SateliteRequest))
+	var request SatellitesRequest
+
+	request.Satellites = []SateliteRequest{
+
+		kenobi.(SateliteRequest),
+		skywalker.(SateliteRequest),
+		sato.(SateliteRequest),
+	}
+
+	response, err := handleTopSecretSplit(request)
+
+	if err != nil {
+		BadRequestMessage(w, "not found")
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
-func handleTopSecretSplitGet(kenobi SateliteRequest, skywalker SateliteRequest, sato SateliteRequest) SecretResponse {
+func handleTopSecretSplit(request SatellitesRequest) (SecretResponse, error) {
 	var response SecretResponse
 
-	response.Message = GetMessage(kenobi.Message, skywalker.Message, sato.Message)
+	message, err := getMessages(request.Satellites)
+	if err != nil {
+		return response, err
+	}
+	response.Message = message
+	getPosition(&response, request.Satellites)
 
-	x, y := GetLocation(kenobi.Distance, skywalker.Distance, sato.Distance)
-	response.Position = Position{X: x, Y: y}
-
-	return response
+	return response, nil
 }

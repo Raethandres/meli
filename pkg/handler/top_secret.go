@@ -18,29 +18,38 @@ func TopSecretHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := handleTopSecret(request)
+	response, err := handleTopSecret(request)
+
+	if err != nil {
+		BadRequestMessage(w, "not found")
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
-func handleTopSecret(request SatellitesRequest) SecretResponse {
+func handleTopSecret(request SatellitesRequest) (SecretResponse, error) {
 	var response SecretResponse
 
-	getMessages(&response, request.Satellites)
+	message, err := getMessages(request.Satellites)
+	if err != nil {
+		return response, err
+	}
+	response.Message = message
 	getPosition(&response, request.Satellites)
 
-	return response
+	return response, nil
 }
 
-func getMessages(response *SecretResponse, satellites []SateliteRequest) {
+func getMessages(satellites []SateliteRequest) (string, error) {
 	var messages [][]string
 
 	for _, s := range satellites {
 		messages = append(messages, s.Message)
 	}
 
-	response.Message = GetMessage(messages...)
+	return GetMessage(messages...)
 }
 
 func getPosition(response *SecretResponse, satellites []SateliteRequest) {
