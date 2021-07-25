@@ -1,0 +1,139 @@
+swagger: '2.0'
+info:
+  description: this is a api from meli chalenge
+  version: 1.0.0
+  title: Operacion Fuego
+tags:
+  - name: top secret
+schemes:
+  - https
+  - http
+paths:
+  /topsecret:
+    post:
+      tags:
+        - top secret
+      summary: Get message decoded and location
+      description: ''
+      operationId: topsecret
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/Satellites'
+      responses:
+        '200':
+          description: successful
+          schema:
+            $ref: '#/definitions/Secret'
+        '404':
+          description: not Found
+  '/topsecret_split/{name}':
+    get:
+      tags:
+        - top secret
+      summary: Find secret by ID
+      description: Returns a single secret
+      operationId: gettopsecret_split
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          description: name of satelite
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Secret'
+        '404':
+          description: not found
+    post:
+      tags:
+        - top secret
+      summary: Updates a secret by satelite
+      description: ''
+      operationId: updatetopsecret_split
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          description: name of satelite
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/SateliteSplit'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Secret'
+        '404':
+          description: not found
+definitions:
+  Satelite:
+    type: object
+    properties:
+      name:
+        type: string
+      distance:
+        type: number
+      message:
+        type: array
+        items:
+          type: string
+    xml:
+      name: Satelite
+  SateliteSplit:
+    type: object
+    properties:
+      distance:
+        type: number
+      message:
+        type: array
+        items:
+          type: string
+    xml:
+      name: SateliteSplit
+  Secret:
+    type: object
+    properties:
+      message:
+        type: string
+      position:
+        type: array
+        items:
+          type: number
+    xml:
+      name: Secret
+  Satellites:
+    type: array
+    items:
+      $ref: '#/definitions/Satelite'
+    xml:
+      name: Satellites
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      type:
+        type: string
+      message:
+        type: string

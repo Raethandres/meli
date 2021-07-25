@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-
 	handler.GoDotEnv()
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	c := cache.New(5*time.Minute, 10*time.Minute)

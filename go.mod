@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
+	github.com/go-openapi/runtime v0.19.29
 	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/gorilla/mux v1.8.0

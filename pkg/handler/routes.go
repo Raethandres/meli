@@ -5,6 +5,7 @@ import (
 
 	. "github.com/patrickmn/go-cache"
 
+	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 )
 
@@ -19,6 +20,13 @@ func Routes(c *Cache) *mux.Router {
 	r.HandleFunc("/topsecret_split/", func(w http.ResponseWriter, r *http.Request) {
 		TopSecretSplitGetHandler(w, r, c)
 	}).Methods("POST")
+
+	// handler for documentation
+	opts := middleware.RedocOpts{SpecURL: "../../swagger.yaml"}
+	sh := middleware.Redoc(opts, nil)
+
+	r.Handle("/docs", sh)
+	r.Handle("/swagger.yaml", http.FileServer(http.Dir("../../")))
 
 	return r
 }

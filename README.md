@@ -1,42 +1,41 @@
 # Meli desafio
 ## Demo
-https:
-
+https://meli-operacion-fuego.herokuapp.com
+## Doc
+https://meli-operacion-fuego.herokuapp.com/docs
 ## Instalación y uso
-### quick run 
+### Quick run 
 
 ```sh
 ./init.sh
 ```
 
-### quick run with docker
+### Quick run with docker
 
 ```sh
 ./initdocker.sh
 ```
 
-### quick run test
+### Quick run test
 
 ```sh
 ./test.sh
 ```
 
-#### Instalar dependencias
+#### Install dependencies
 
 ```sh
 cd ./cmd/server
 go get
 ```
 
-#### Ejecutar tests
+#### Run tests
 ```sh
 $ go test ./...
 ```
 
-#### Correr proyecto
+#### Run project
 ```sh
 $ go run .
 ```
 Ir a `http://127.0.0.1:80`
-
-
