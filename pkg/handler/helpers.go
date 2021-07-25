@@ -4,6 +4,10 @@ import (
 	"log"
 	"os"
 
+	"encoding/json"
+	. "meli/pkg/response"
+	"net/http"
+
 	"github.com/joho/godotenv"
 )
 
@@ -19,4 +23,12 @@ func GoDotEnv() {
 		}
 	}
 
+}
+
+func BadRequest(w http.ResponseWriter, msg string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+
+	response := ErrorResponse{Error: msg}
+	json.NewEncoder(w).Encode(response)
 }

@@ -2,26 +2,32 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	. "meli/cmd/data"
 	. "meli/pkg/domain"
 	. "meli/pkg/request"
 	. "meli/pkg/response"
+
+	. "github.com/patrickmn/go-cache"
+
 	"net/http"
 )
 
-func TopSecretHandler(w http.ResponseWriter, r *http.Request) {
+func TopSecretHandler(w http.ResponseWriter, r *http.Request, c *Cache) {
 	var request SatellitesRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 
 	if err != nil {
-		BadRequestMessage(w, "Empty Body")
+		BadRequest(w, "not found")
 		return
 	}
+
+	setCache(request.Satellites, c)
 
 	response, err := handleTopSecret(request)
 
 	if err != nil {
-		BadRequestMessage(w, "not found")
+		BadRequest(w, "not found")
 		return
 	}
 
@@ -68,4 +74,16 @@ func getPosition(response *SecretResponse, satellites []SateliteRequest) {
 
 	x, y := GetLocation(distances...)
 	response.Position = Position{X: x, Y: y}
+}
+
+func setCache(satellites []SateliteRequest, c *Cache) {
+	for _, s := range satellites {
+		c.Set(s.Name, s, DefaultExpiration)
+	}
+	kenobi, kenobiExist := c.Get(KENOBI)
+	skywalker, skywalkerExist := c.Get(SKYWALKER)
+	sato, satoExist := c.Get(SATO)
+	log.Print(kenobi, kenobiExist,
+		skywalker, skywalkerExist,
+		sato, satoExist)
 }

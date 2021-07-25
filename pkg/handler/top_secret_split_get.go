@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	. "meli/cmd/data"
@@ -15,16 +16,17 @@ func TopSecretSplitGetHandler(w http.ResponseWriter, r *http.Request, c *Cache) 
 	kenobi, kenobiExist := c.Get(KENOBI)
 	skywalker, skywalkerExist := c.Get(SKYWALKER)
 	sato, satoExist := c.Get(SATO)
-
 	if !kenobiExist || !skywalkerExist || !satoExist {
-		BadRequestMessage(w, "Not enough information")
+		BadRequest(w, "not found")
 		return
 	}
+	log.Print(kenobi, kenobiExist,
+		skywalker, skywalkerExist,
+		sato, satoExist)
 
 	var request SatellitesRequest
 
 	request.Satellites = []SateliteRequest{
-
 		kenobi.(SateliteRequest),
 		skywalker.(SateliteRequest),
 		sato.(SateliteRequest),
@@ -33,10 +35,9 @@ func TopSecretSplitGetHandler(w http.ResponseWriter, r *http.Request, c *Cache) 
 	response, err := handleTopSecretSplit(request)
 
 	if err != nil {
-		BadRequestMessage(w, "not found")
+		BadRequest(w, "not found")
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
