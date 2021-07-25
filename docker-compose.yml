@@ -7,17 +7,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    networks:
-      go-network:
-        ipv4_address: "172.120.0.11"
     ports:
       - "8080:8080"
 
-networks:
-  go-network:
-    name: webnetwork
-    ipam:
-      config:
-        - subnet: "172.120.0.0/24"
 
 
